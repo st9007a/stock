@@ -2,15 +2,16 @@ import datetime
 import pickle
 import numpy as np
 
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 
 from util.dataset import load, get_batch
 
-start = '2017-01-01'
-end = '2017-09-01'
+start = '2016-06-30'
+end = '2017-10-10'
+pred_date = '2017-10-15'
 
 d = start
 i = 0
@@ -52,8 +53,8 @@ print('0: ' + str(cnt3))
 x_train, x_test, y_train, y_test = train_test_split(x_total, y_total, test_size = 0.2, random_state = 42)
 
 clf = Pipeline([
-               ('pca', PCA(n_components = 20)),
-               ('clf', RandomForestClassifier(n_estimators = 20, max_depth = 6, random_state = 0))
+               ('svd', TruncatedSVD(n_components = 20)),
+               ('clf', RandomForestClassifier(n_estimators = 20, max_depth = 10, random_state = 0))
                ])
 
 clf.fit(x_train, y_train)
@@ -61,7 +62,7 @@ print('training accuracy: ' + str(clf.score(x_train, y_train)))
 print('validate accuracy: ' + str(clf.score(x_test, y_test)))
 print('cross validation: ' + str(cross_val_score(clf, x_total, y_total, cv = 5)))
 
-x_pred, y_pred, com = load('2017-09-04')
+x_pred, y_pred, com = load(pred_date)
 
 print('predict accuracy: ' + str(clf.score(x_pred, y_pred)))
 pred = clf.predict(x_pred)

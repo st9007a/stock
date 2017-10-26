@@ -103,7 +103,7 @@ def load(date):
             elif float(target_js_data[com]['close']) - float(com_stock[com][0]['close']) < 0:
                 y.append(-1)
             else:
-                y.append(0)
+                y.append(-2)
 
     i = 0
     while (i < len(y)):
@@ -113,6 +113,20 @@ def load(date):
             del com_list[i]
             i -= 1
         i += 1
+
+    # i = 0
+    # while (i < len(y)):
+    #     for val in x[i]:
+    #         b = False
+    #         if val == -1:
+    #             del x[i]
+    #             del y[i]
+    #             del com_list[i]
+    #             i -= 1
+    #             b = True
+    #         if b == True:
+    #             break
+    #     i += 1
 
     # pad x
     for xi in x:
@@ -182,14 +196,14 @@ def get_batch(batch_size):
     if batch_size > 500:
         sys.exit('error: batch size is out of range (maximun size is 500)')
 
-    file_list = glob('./res/*.json')
-    date_list = [re.search('\.\/res\/(.+)\.json', file).group(1) for file in file_list]
+    file_list = glob('/home/db/stock_resource_center/resource/twse/json/*.json')
+    date_list = [re.search('json\/(.+)\.json', file).group(1) for file in file_list]
 
     date = random.choice(date_list)
     while date in exclude_dates:
         date = random.choice(date_list)
 
-    x, y = load(date)
+    x, y, _ = load(date)
     l = len(y)
     p = random.randint(0, l - 1)
 
