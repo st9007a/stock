@@ -42,8 +42,8 @@ for com in com_list:
         'weight': 1,
         'life': 3,
         'open_price': open_price,
-        'close_high_price': open_price + 0.5,
-        'close_low_price': open_price - 0.5
+        'close_high_price': open_price + 0.15,
+        'close_low_price': open_price - 0.15
     }
 
     disicion_list.append(disicion)
