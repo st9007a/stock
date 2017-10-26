@@ -29,7 +29,7 @@ for com in com_list:
 
     type = None
     open_price = None
-    if pred[i] == 1:
+    if pred[i] == -1:
         type = 'short'
         open_price = x[i][1] + 0.1
     else:
