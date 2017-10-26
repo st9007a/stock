@@ -114,25 +114,26 @@ def load(date):
             i -= 1
         i += 1
 
-    # i = 0
-    # while (i < len(y)):
-    #     for val in x[i]:
-    #         b = False
-    #         if val == -1:
-    #             del x[i]
-    #             del y[i]
-    #             del com_list[i]
-    #             i -= 1
-    #             b = True
-    #         if b == True:
-    #             break
-    #     i += 1
+    i = 0
+    while (i < len(y)):
+        for val in x[i]:
+            b = False
+            if val == -1:
+                del x[i]
+                del y[i]
+                del com_list[i]
+                i -= 1
+                b = True
+            if b == True:
+                break
+        i += 1
 
     # pad x
     for xi in x:
         if len(xi) < 30:
             xi += [0] * (30 - len(xi))
 
+    # pprint(x)
 
     return x, y, com_list
 
@@ -182,35 +183,35 @@ def load_pred_data(date):
     for xi in x:
         if len(xi) < 30:
             xi += [0] * (30 - len(xi))
-
+    i = 0
+    while (i < len(x)):
+        for val in x[i]:
+            b = False
+            if val == -1:
+                del x[i]
+                del com_list[i]
+                i -= 1
+                b = True
+            if b == True:
+                break
+        i += 1
 
     return x, com_list
 
-# random select `batch_size` samples data
-# in:
-#   batch_size { int }: count of samples
-# out:
-#   x { list }: 2-dimension list, shape = (batch_size, 42)
-#   y { list }: 1-dimemsion list, shape = (batch_size)
-def get_batch(batch_size):
-    if batch_size > 500:
-        sys.exit('error: batch size is out of range (maximun size is 500)')
+def get_full_data(start, end):
+    x = []
+    y = []
+    i = 0
+    while(True):
+        i += 1
+        d = (datetime.datetime.strptime(start, '%Y-%m-%d') + datetime.timedelta(days = i)).strftime('%Y-%m-%d')
+        if (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(d, '%Y-%m-%d')).total_seconds() < 0:
+            break
 
-    file_list = glob('/home/db/stock_resource_center/resource/twse/json/*.json')
-    date_list = [re.search('json\/(.+)\.json', file).group(1) for file in file_list]
+        x_i, y_i, _ = load(d)
+        x += x_i
+        y += y_i
 
-    date = random.choice(date_list)
-    while date in exclude_dates:
-        date = random.choice(date_list)
+    y = [[1, 0] if i == 1 else [0, 1] for i in y]
 
-    x, y, _ = load(date)
-    l = len(y)
-    p = random.randint(0, l - 1)
-
-    x_batch = []
-    y_batch = []
-    for i in range(batch_size):
-        x_batch.append(x[i % l])
-        y_batch.append(y[i % l])
-
-    return x_batch, y_batch
+    return x, y

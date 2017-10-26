@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split, cross_val_score
 
 from util.dataset import load, get_batch
 
-start = '2016-06-30'
-end = '2017-10-10'
+start = '2017-07-01'
+end = '2017-10-01'
 pred_date = '2017-10-15'
 
 d = start
@@ -54,7 +54,7 @@ x_train, x_test, y_train, y_test = train_test_split(x_total, y_total, test_size 
 
 clf = Pipeline([
                ('svd', TruncatedSVD(n_components = 20)),
-               ('clf', RandomForestClassifier(n_estimators = 20, max_depth = 10, random_state = 0))
+               ('clf', RandomForestClassifier(n_estimators = 20, max_depth = 6, random_state = 0))
                ])
 
 clf.fit(x_train, y_train)
@@ -82,6 +82,6 @@ print('1: ' + str(cnt1))
 print('-1: ' + str(cnt2))
 print('0: ' + str(cnt3))
 
-print('save model to `model.pkl`')
-with open('./model.pkl', 'wb')as p:
-    pickle.dump(clf, p, protocol = pickle.HIGHEST_PROTOCOL)
+# print('save model to `model.pkl`')
+# with open('./model.pkl', 'wb')as p:
+#     pickle.dump(clf, p, protocol = pickle.HIGHEST_PROTOCOL)
