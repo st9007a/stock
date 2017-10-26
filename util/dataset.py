@@ -137,6 +137,115 @@ def load(date):
 
     return x, y, com_list
 
+def load_data(start, end):
+
+    com_list = {}
+    json_data_list = []
+    i = 0
+    while(True):
+        i += 1
+        d = (datetime.datetime.strptime(start, '%Y-%m-%d') + datetime.timedelta(days = i)).strftime('%Y-%m-%d')
+        if (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(d, '%Y-%m-%d')).total_seconds() < 0:
+            break
+
+        if os.path.isfile(src % (d)):
+            json_data_list.append(load_json_file(d))
+
+    for j in json_data_list:
+        for com in j:
+            if com == 'id' or com == 'taiex':
+                continue
+
+            is_jump = False
+            for val in j[com]:
+                if j[com][val] == 'NULL' or isinstance(j[com][val], str) == False:
+                    is_jump = True
+                    break
+
+            if is_jump == True:
+                continue
+
+            if com not in com_list:
+                com_list[com] = []
+
+            com_list[com].append(j[com])
+
+    x = []
+    y = []
+    for com in com_list:
+        for i in range(len(com_list[com]) - 6):
+            data = []
+            for j in range(i, i + 5):
+                data += [float(com_list[com][j][val]) for val in com_list[com][j]]
+
+            x.append(data)
+
+            if float(com_list[com][i + 5]['close']) - float(com_list[com][i + 4]['close']) > 0:
+                y.append([1, 0])
+                # y.append(1)
+            else:
+                y.append([0, 1])
+                # y.append(0)
+
+    return x, y
+
+def get_pred(date):
+    json_data_list = []
+    com_list = {}
+    i = 1
+    while (len(json_data_list) < 20):
+        d = (datetime.datetime.strptime(date, '%Y-%m-%d') - datetime.timedelta(days = i)).strftime('%Y-%m-%d')
+        if os.path.isfile(src % (d)):
+            json_data_list.append(load_json_file(d))
+        i += 1
+
+    json_data_list.reverse()
+
+    for j in json_data_list:
+        for com in j:
+            if com == 'id' or com == 'taiex':
+                continue
+
+            is_jump = False
+            for val in j[com]:
+                if j[com][val] == 'NULL' or isinstance(j[com][val], str) == False:
+                    is_jump = True
+                    break
+
+            if is_jump == True:
+                continue
+
+            if com not in com_list:
+                com_list[com] = []
+
+            com_list[com].append(j[com])
+
+    x = []
+    y = []
+
+    for com in com_list:
+        if len(com_list[com]) < 6:
+            continue
+
+        com_x = com_list[com][len(com_list[com]) - 6:len(com_list[com]) - 1]
+        data = []
+        for c in com_x:
+            data += [float(c[val]) for val in c]
+
+        x.append(data)
+
+        if float(com_list[com][len(com_list[com]) - 1]['close']) - float(com_list[com][len(com_list[com]) - 2]['close']) > 0:
+            y.append([1, 0])
+            # y.append(1)
+        else:
+            y.append([0, 1])
+            # y.append(0)
+
+    print(np.array(x).shape)
+    print(np.array(y).shape)
+
+    return x, y
+
 # load the feature via date
 # in:
 #   date { str }: date formate string `YYYY-mm-dd`
@@ -147,7 +256,6 @@ def load_pred_data(date):
     i = 1
     while (len(tmp) < 5):
         d = (datetime.datetime.strptime(date, '%Y-%m-%d') - datetime.timedelta(days = i)).strftime('%Y-%m-%d')
-        print(d)
         if os.path.isfile(src % (d)):
             tmp.append(load_json_file(d))
         i += 1
