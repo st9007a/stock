@@ -20,12 +20,6 @@ disicion_list = []
 
 i = 0
 for com in com_list:
-    # if i >= 50:
-    #     break
-    #
-    # if pred[i] == 0:
-    #     i += 1
-    #     continue
 
     type = None
     open_price = None
@@ -47,7 +41,6 @@ for com in com_list:
     }
 
     disicion_list.append(disicion)
-    # i += 1
 
 with open('../commit/' + date + '_' + date + '.json', 'w')as j:
     json.dump(disicion_list, j)

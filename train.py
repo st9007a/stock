@@ -7,28 +7,13 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 
-from util.dataset import load_data, get_pred
+from util.dataset import load_data, pick_validate_data
 
 start = '2017-07-01'
 end = '2017-10-01'
 pred_date = '2017-10-25'
 
-d = start
-i = 0
-
-# x_total = []
-# y_total = []
-
 print('load data')
-# while(True):
-#     i += 5
-#     d = (datetime.datetime.strptime(start, '%Y-%m-%d') + datetime.timedelta(days = i)).strftime('%Y-%m-%d')
-#     if (datetime.datetime.strptime(end, '%Y-%m-%d') - datetime.datetime.strptime(d, '%Y-%m-%d')).total_seconds() < 0:
-#         break
-#
-#     x, y, _ =load(d)
-#     x_total += x
-#     y_total += y
 
 x_total, y_total = load_data(start, end)
 
@@ -64,8 +49,7 @@ print('training accuracy: ' + str(clf.score(x_train, y_train)))
 print('validate accuracy: ' + str(clf.score(x_test, y_test)))
 print('cross validation: ' + str(cross_val_score(clf, x_total, y_total, cv = 5)))
 
-# x_pred, y_pred, com = load(pred_date)
-x_pred, y_pred = get_pred(pred_date)
+x_pred, y_pred = pick_validate_data(pred_date)
 
 print('predict accuracy: ' + str(clf.score(x_pred, y_pred)))
 pred = clf.predict(x_pred)
