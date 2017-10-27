@@ -114,7 +114,7 @@ def load_pred_data(date):
         x.append(data)
         coms.append(com)
 
-    return x, com
+    return x, coms
 
 def pick_validate_data(date, onehot = False):
     json_data_list = []
