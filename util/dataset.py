@@ -48,7 +48,7 @@ def convert2com_by_timeseries(json_data_list):
 
     return com_list
 
-def load_data(start, end):
+def load_data(start, end, onehot = False):
     json_data_list = []
     i = 0
     while(True):
@@ -74,11 +74,15 @@ def load_data(start, end):
             x.append(data)
 
             if float(com_list[com][i + 5]['close']) - float(com_list[com][i + 4]['close']) > 0:
-                y.append([1, 0])
-                # y.append(1)
+                if onehot == True:
+                    y.append([1, 0])
+                else:
+                    y.append(1)
             else:
-                y.append([0, 1])
-                # y.append(0)
+                if onehot == True:
+                    y.append([0, 1])
+                else:
+                    y.append(0)
 
     return x, y
 
@@ -112,7 +116,7 @@ def load_pred_data(date):
 
     return x, com
 
-def pick_validate_data(date):
+def pick_validate_data(date, onehot = False):
     json_data_list = []
     i = 1
     while (len(json_data_list) < 20):
@@ -140,10 +144,14 @@ def pick_validate_data(date):
         x.append(data)
 
         if float(com_list[com][len(com_list[com]) - 1]['close']) - float(com_list[com][len(com_list[com]) - 2]['close']) > 0:
-            y.append([1, 0])
-            # y.append(1)
+            if onehot == True:
+                y.append([1, 0])
+            else:
+                y.append(1)
         else:
-            y.append([0, 1])
-            # y.append(0)
+            if onehot == True:
+                y.append([0, 1])
+            else:
+                y.append(0)
 
     return x, y
