@@ -53,6 +53,7 @@ def gen_dis_file(final_x, final_y, final_com, date):
     with open('../commit/' + date + '_' + date + '.json', 'w')as j:
         json.dump(disicion_list, j)
 
+
 config = json.load(open('config.json', 'r'))
 
 date_from = sys.argv[1]
@@ -70,16 +71,45 @@ x_tr, y_tr = load_data(config['start'], config['end'], onehot = True)
 
 model.fit(x_tr, y_tr, epochs = 20, batch_size = 128, validation_split = 0.2, verbose = 1)
 
-i = 0
-while(True):
-    d = (datetime.datetime.strptime(date_from, '%Y-%m-%d') + datetime.timedelta(days = i)).strftime('%Y-%m-%d')
-    if (datetime.datetime.strptime(date_to, '%Y-%m-%d') - datetime.datetime.strptime(d, '%Y-%m-%d')).total_seconds() < 0:
-        break
+if date_from == date_to:
+    final_x, final_y, final_com = select_stock(model, date_from)
+    gen_dis_file(final_x, final_y, final_com, date_from)
 
-    i += 1
+else:
+    i = 0
+    disicion_file = {}
+    while(True):
+        d = (datetime.datetime.strptime(date_from, '%Y-%m-%d') + datetime.timedelta(days = i)).strftime('%Y-%m-%d')
+        if (datetime.datetime.strptime(date_to, '%Y-%m-%d') - datetime.datetime.strptime(d, '%Y-%m-%d')).total_seconds() < 0:
+            break
 
-    final_x, final_y, final_com = select_stock(model, d)
-    gen_dis_file(final_x, final_y, final_com, d)
+        i += 1
 
+        final_x, final_y, final_com = select_stock(model, d)
+
+        disicion_list = []
+        j = 0
+        for xi in final_x:
+            type = None
+            if final_y[j][0] > final_y[j][1]:
+                type = 'buy'
+            else:
+                type = 'short'
+
+            disicion = {
+                'code': final_com[j],
+                'type': type,
+                'weigth': 1,
+                'life': 3,
+                'open_price': 'open',
+                'close_high_price': xi[1] + 0.1,
+                'close_low_price': xi[1] - 0.1
+            }
+            disicion_list.append(disicion)
+            j += 1
+        disicion_file[d] = disicion_list
+
+    with open('../commit/' + date_from + '_' + date_to + '.json', 'w')as j:
+        json.dump(disicion_file, j)
 
 # model.save('nn_model.h5')
