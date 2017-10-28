@@ -1,0 +1,6 @@
+{
+  "up_upper_bound": 0.55,
+  "up_lower_bound": 0.5,
+  "down_upper_bound": 0.6,
+  "down_lower_bound": 0.55
+}
