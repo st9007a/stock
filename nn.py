@@ -64,6 +64,7 @@ for xi in final_x:
         'close_low_price': xi[1] - 0.1
     }
     disicion_list.append(disicion)
+    i += 1
 
 with open('../commit/' + date + '_' + date + '.json', 'w')as j:
     json.dump(disicion_list, j)
