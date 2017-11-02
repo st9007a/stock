@@ -12,7 +12,7 @@ from pprint import pprint
 merry = '/home/db/stock_resource_center/resource/twse/json/%s.json'
 luffy = '/home/mlb/res/stock/twse/json/%s.json'
 
-src = merry
+src = luffy
 # load the json file via date
 # in:
 #   date { str }: date format string `YYYY-mm-dd`
@@ -69,7 +69,13 @@ def load_data(start, end, onehot = False):
         for i in range(len(com_list[com]) - 6):
             data = []
             for j in range(i, i + 5):
-                data += [float(com_list[com][j][val]) for val in com_list[com][j]]
+                # data += [float(com_list[com][j][val]) for val in com_list[com][j]]
+                data += [float(com_list[com][j]['adj_close']), \
+                         float(com_list[com][j]['close']), \
+                         float(com_list[com][j]['high']), \
+                         float(com_list[com][j]['low']), \
+                         float(com_list[com][j]['open']), \
+                         float(com_list[com][j]['volume'])]
 
             x.append(data)
 
@@ -109,7 +115,13 @@ def load_pred_data(date):
         com_x = com_list[com][len(com_list[com]) - 6:len(com_list[com]) - 1]
         data = []
         for c in com_x:
-            data += [float(c[val]) for val in c]
+            # data += [float(c[val]) for val in c]
+            data += [float(c['adj_close']), \
+                     float(c['close']), \
+                     float(c['high']), \
+                     float(c['low']), \
+                     float(c['open']), \
+                     float(c['volume'])]
 
         x.append(data)
         coms.append(com)
@@ -139,7 +151,13 @@ def pick_validate_data(date, onehot = False):
         com_x = com_list[com][len(com_list[com]) - 6:len(com_list[com]) - 1]
         data = []
         for c in com_x:
-            data += [float(c[val]) for val in c]
+            # data += [float(c[val]) for val in c]
+            data += [float(c['adj_close']), \
+                     float(c['close']), \
+                     float(c['high']), \
+                     float(c['low']), \
+                     float(c['open']), \
+                     float(c['volume'])]
 
         x.append(data)
 
