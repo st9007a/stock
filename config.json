@@ -2,7 +2,7 @@
   "up_upper_bound": 0.55,
   "up_lower_bound": 0.5,
   "down_upper_bound": 0.6,
-  "down_lower_bound": 0.55,
+  "down_lower_bound": 0.57,
   "start": "2017-07-01",
   "end": "2017-10-20",
   "eval": "2017-10-25"
