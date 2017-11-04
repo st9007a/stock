@@ -43,7 +43,7 @@ def gen_dis_file(final_x, final_y, final_com, date):
             'type': type,
             'weigth': 1,
             'life': 3,
-            'open_price': 'open',
+            'open_price': xi[1],
             'close_high_price': xi[1] + 0.1,
             'close_low_price': xi[1] - 0.1
         }
@@ -101,7 +101,7 @@ else:
                 'type': type,
                 'weigth': 1,
                 'life': 3,
-                'open_price': 'open',
+                'open_price': xi[1],
                 'close_high_price': xi[1] + 0.1,
                 'close_low_price': xi[1] - 0.1
             }
