@@ -41,7 +41,7 @@ def gen_dis_file(final_x, final_y, final_com, date):
         disicion = {
             'code': final_com[i],
             'type': type,
-            'weigth': 1,
+            'weight': 1,
             'life': 3,
             'open_price': xi[1],
             'close_high_price': xi[1] + 0.1,
@@ -99,7 +99,7 @@ else:
             disicion = {
                 'code': final_com[j],
                 'type': type,
-                'weigth': 1,
+                'weight': 1,
                 'life': 3,
                 'open_price': xi[1],
                 'close_high_price': xi[1] + 0.1,
